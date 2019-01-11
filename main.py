@@ -38,4 +38,4 @@ with open('./queries.json') as f:
     data['items'].append(rule_alerts)
 
   res = es.index(index=alert_index, doc_type='_doc', id=datestring, body=data)
-  print(data)
+  print(res)
