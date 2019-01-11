@@ -1,10 +1,10 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ template "querying.fullname" . }}
+  name: {{ template "fullname" . }}
   
 spec:
-  schedule: {{ .Values.querying.schedule | quote}}
+  schedule: {{ .Values.schedule | quote}}
   jobTemplate:
     spec:
       template:
@@ -16,12 +16,12 @@ spec:
           imagePullPolicy: Always
           containers:
           - name: querying
-            image: {{ .Values.querying.image }}:{{ .Values.querying.image_tag }}
+            image: {{ .Values.image }}:{{ .Values.image_tag }}
             env:
             - name: ELASTICSEARCH_INDEX_URL_ALERTS
-              value: {{ .Values.querying.elasticsearch_url }}/{{ .Values.querying.index }}
+              value: {{ .Values.elasticsearch_url }}/{{ .Values.index }}
             - name: ELASTICSEARCH_INDEX_URL_PROCESSING
-              value: {{ .Values.querying.elasticsearch_url }}/{{ .Values.querying.processor_index }}
+              value: {{ .Values.elasticsearch_url }}/{{ .Values.processor_index }}
             volumeMounts:
             - name: queries
               mountPath: /usr/src/app/queries.json
@@ -31,4 +31,4 @@ spec:
               configMap:
                 # Provide the name of the ConfigMap containing the files you want
                 # to add to the container
-                name: {{ template "querying.fullname" . }}
+                name: {{ template "fullname" . }}
