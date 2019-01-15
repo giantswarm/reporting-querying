@@ -1,7 +1,6 @@
-querying:
-  image: quay.io/giantswarm/reporting-querying
-  image_tag: latest
-  index: alerts
-  processor_index: processor-test1
-  elasticsearch_url: http://elasticsearch.reporting.svc:9200
-  schedule: "*/1 * * * *"
+image: quay.io/giantswarm/reporting-querying
+image_tag: latest
+index: alerts
+processor_index: processor-test1
+elasticsearch_url: http://elasticsearch.reporting.svc:9200
+schedule: "*/1 * * * *"
