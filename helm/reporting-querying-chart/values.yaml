@@ -3,5 +3,5 @@ querying:
   image_tag: latest
   index: alerts
   processor_index: processor-test1
-  elasticsearch_url: http://reporting-tool-reporting-chart-elasticsearch.jgsqware-reporting-tool.svc:9200
+  elasticsearch_url: http://elasticsearch.reporting.svc:9200
   schedule: "*/1 * * * *"
