@@ -24,6 +24,12 @@ data:
           "severity": "notify",
           "description": "Liveness probes are really important in order to not lose any request and help Kubernetes to discover the state of your apps. https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-a-liveness-command",
           "query": "{\"constant_score\":{\"filter\":{\"bool\":{\"must_not\":{\"exists\":{\"field\":\"spec.containers.livenessProbe\"}}}}}}"
+        },
+        {
+          "name": "more-than-one-replica",
+          "severity": "notify",
+          "description": "Running a single replica of your application could lead to outage in case a node is down.",
+          "query": "{\"bool\":{\"must\": [{\"match\":{\"kind\":\"Deployment\"}},{\"range\":{\"spec.replicas\":{\"lte\":1}}}]}}"
         }
       ]
     }
