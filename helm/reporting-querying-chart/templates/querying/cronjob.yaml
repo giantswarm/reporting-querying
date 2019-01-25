@@ -12,8 +12,11 @@ spec:
           labels:
             app: reporting-querying
         spec:
-          restartPolicy: Never
+          concurrencyPolicy: Forbid
           imagePullPolicy: Always
+          restartPolicy: Never
+          failedJobsHistoryLimit: 3
+          successfulJobsHistoryLimit: 1
           containers:
           - name: querying
             image: {{ .Values.image }}:{{ .Values.image_tag }}
