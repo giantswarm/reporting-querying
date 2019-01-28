@@ -30,6 +30,12 @@ data:
           "severity": "notify",
           "description": "Running a single replica of your application could lead to outage in case a node is down.",
           "query": "{\"bool\":{\"must\": [{\"match\":{\"kind\":\"Deployment\"}},{\"range\":{\"spec.replicas\":{\"lte\":1}}}]}}"
+        },
+        {
+          "name": "no-latest-tag-on-image",
+          "severity": "notify",
+          "description": "Running containers without control the version is discourage. https://vsupalov.com/docker-latest-tag/",
+          "query": "{\"bool\":{\"must\": [{\"regexp\":{\"spec.containers.image\":\".*latest\"}}]}}"
         }
       ]
     }
