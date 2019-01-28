@@ -30,6 +30,12 @@ data:
           "severity": "notify",
           "description": "Running a single replica of your application could lead to outage in case a node is down.",
           "query": "{\"bool\":{\"must\": [{\"match\":{\"kind\":\"Deployment\"}},{\"range\":{\"spec.replicas\":{\"lte\":1}}}]}}"
+        },
+        {
+          "name": "no-credentials-on-env",
+          "severity": "notify",
+          "description": "Store credentials on ENV variables is a bad practice, use secrets instead of. https://kubernetes.io/docs/concepts/configuration/secret/",
+          "query": "{\"bool\":{\"must\": [{\"regexp\":{\"spec.containers.env.name.keyword\":\".*(PASSWORD|password|passwd|PASSWD|token|TOKEN).*\"}}]}}"
         }
       ]
     }
