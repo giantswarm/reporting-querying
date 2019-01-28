@@ -36,6 +36,12 @@ data:
           "severity": "notify",
           "description": "Running containers without control the version is discourage. https://vsupalov.com/docker-latest-tag/",
           "query": "{\"bool\":{\"must\": [{\"regexp\":{\"spec.containers.image\":\".*latest\"}}]}}"
+         },
+         {
+          "name": "no-credentials-on-env",
+          "severity": "notify",
+          "description": "Store credentials on ENV variables is a bad practice, use secrets instead of. https://kubernetes.io/docs/concepts/configuration/secret/",
+          "query": "{\"bool\":{\"must\": [{\"regexp\":{\"spec.containers.env.name.keyword\":\".*(PASSWORD|password|passwd|PASSWD|token|TOKEN).*\"}}]}}"
         }
       ]
     }
