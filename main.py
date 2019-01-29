@@ -3,6 +3,7 @@ import json
 import datetime
 from elasticsearch import Elasticsearch
 
+TIMESTAMP = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 RULES_FILE = './queries.json'
 TODAY_INDEX = datetime.datetime.now().strftime("%y-%m-%d")
 ALERTS_HISTORY_DAYS = os.environ['DAYS_HISTORY']
@@ -11,35 +12,33 @@ _, INDEX_ALERTS = os.environ['ELASTICSEARCH_INDEX_URL_ALERTS'].rsplit('/', 1)
 es = Elasticsearch([host])
 
 def get_alerts(rules):
-  alerts = {
-    'date': TODAY_INDEX,
-    'timestamp': datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
-    'items': []
-  }
+  alerts = []
   for rule in rules['list']:
-    rule_alerts = get_alert(rule)
-    alerts['items'].append(rule_alerts)
+    alerts += get_alert(rule)
 
   return alerts
 
 def get_alert(rule):
-  rule_alerts = {
+  alerts = []
+  alert = {
+    'date': TODAY_INDEX,
+    'timestamp': TIMESTAMP,
     'name': rule['name'],
     'description': rule['description'],
     'severity': rule['severity'],
-    'resources': []
+    'pod': '',
+    'namespace': ''
   }
 
   query = json.loads(rule['query'])
-  alerts = search_alerts(query)
-  print("Got %d alerts for alert %s" % (len(alerts), rule['name']))
-  for alert in alerts:
-    rule_alerts['resources'].append({
-      'pod': alert["_source"]["metadata"]["name"],
-      'namespace': alert["_source"]["metadata"]["namespace"]
-    })
+  docs = search_alerts(query)
+  print("Got %d alerts for rule %s" % (len(alerts), rule['name']))
+  for doc in docs:
+    alert['pod'] = doc["_source"]["metadata"]["name"]
+    alert['namespace'] = doc["_source"]["metadata"]["namespace"]
+    alerts.append(alert)
 
-  return rule_alerts
+  return alerts
 
 def search_alerts(query):
   res = es.search(index=INDEX_PROCESSOR, body={"query": query})
@@ -47,8 +46,10 @@ def search_alerts(query):
   return res['hits']['hits']
 
 def save_alerts(alerts):
-  res = es.index(index=INDEX_ALERTS, doc_type='_doc', id=TODAY_INDEX, body=alerts)
-  print(res)
+  for alert in alerts:
+    print('saving alert %s' % alert)
+    res = es.index(index=INDEX_ALERTS, doc_type='_doc', body=alert)
+    print(res)
 
 def delete_proccesed_index():
   expr_date = "now-" + ALERTS_HISTORY_DAYS + "d"

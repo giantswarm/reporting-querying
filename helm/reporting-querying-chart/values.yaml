@@ -3,4 +3,4 @@ image_tag: latest
 index: alerts
 processor_index: gs-processor
 elasticsearch_url: http://elasticsearch.reporting.svc:9200
-schedule: "* */1 * * *"
+schedule: "0 1 * * *"
