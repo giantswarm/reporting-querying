@@ -26,6 +26,7 @@ def get_alert(rule):
     'name': rule['name'],
     'description': rule['description'],
     'severity': rule['severity'],
+    'cluster': '',
     'pod': '',
     'namespace': ''
   }
@@ -36,6 +37,7 @@ def get_alert(rule):
   for doc in docs:
     alert['pod'] = doc["_source"]["metadata"]["name"]
     alert['namespace'] = doc["_source"]["metadata"]["namespace"]
+    alert['cluster'] = doc["_source"]["metadata"]["cluster"]
     alerts.append(alert)
 
   return alerts
