@@ -19,12 +19,14 @@ spec:
           successfulJobsHistoryLimit: 1
           containers:
           - name: querying
-            image: {{ .Values.image }}:{{ .Values.image_tag }}
+            image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
             env:
             - name: ELASTICSEARCH_INDEX_URL_ALERTS
               value: {{ .Values.elasticsearch_url }}/{{ .Values.index }}
-            - name: ELASTICSEARCH_INDEX_URL_PROCESSING
+            - name: ELASTICSEARCH_INDEX_URL_PROCESSOR
               value: {{ .Values.elasticsearch_url }}/{{ .Values.processor_index }}
+            - name: DAYS_HISTORY
+              value: "{{ .Values.days_history }}"
             volumeMounts:
             - name: queries
               mountPath: /usr/src/app/queries.json
