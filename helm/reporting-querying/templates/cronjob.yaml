@@ -20,7 +20,7 @@ spec:
           restartPolicy: Never
           containers:
           - name: querying
-            image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            image: quay.io/giantswarm/reporting-querying:{{ .Chart.Revision }}
             env:
             - name: ELASTICSEARCH_INDEX_URL_ALERTS
               value: {{ .Values.elasticsearch_url }}/{{ .Values.index }}
